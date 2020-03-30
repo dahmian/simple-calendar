@@ -3,18 +3,27 @@
 
 <style>
 #calendar {
+  width: 500px;
+}
+
+#calendar .container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  width: 500px;
   border-style: solid;
   border-color: black;
   border-width: 1px;
 }
 
-#calendar div {
+#calendar .container div {
   height: 50px;
   line-height: 50px;
   text-align: center;
+}
+
+#calendar .title {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 1em;
 }
 
 #calendar .dayLabel {
@@ -27,19 +36,28 @@
 <script>
 const january = new Date();
 january.setMonth(1);
-render('#calendar', january);
+renderDateTitle('#calendar', january);
+renderCalendar('#calendar', january);
 
-function render(DOMquery, date = new Date()) {
+function renderDateTitle(DOMquery, date) {
+  const titleDiv = document.createElement('div');
+  titleDiv.setAttribute('class', 'title');
+  titleDiv.append(`${date.getMonth()}/${date.getFullYear()}`);
+  document.querySelector(DOMquery).append(titleDiv);
+}
+
+function renderCalendar(DOMquery, date = new Date()) {
   const renderedDatePrimative = date.valueOf();
   const squares = generateDaysOfWeekLabels().concat(generateBlanks(renderedDatePrimative), generateDays(renderedDatePrimative));
-  const documentFragment = document.createDocumentFragment();
+  const containerDiv = document.createElement('div');
+  containerDiv.setAttribute('class', 'container');
   for(const square of squares) {
     const div = document.createElement('div');
     div.append(square.label);
     div.setAttribute('class', square.className);
-    documentFragment.append(div);
+    containerDiv.append(div);
   }
-  document.querySelector(DOMquery).append(documentFragment);
+  document.querySelector(DOMquery).append(containerDiv);
 }
 
 function generateDaysOfWeekLabels() {
