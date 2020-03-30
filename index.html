@@ -25,10 +25,13 @@
 </style>
 
 <script>
-render('#calendar', 1);
+const january = new Date();
+january.setMonth(1);
+render('#calendar', january);
 
-function render(DOMquery, month) {
-  const squares = generateDaysOfWeekLabels().concat(generateBlanks(month), generateDays(month));
+function render(DOMquery, date = new Date()) {
+  const renderedDatePrimative = date.valueOf();
+  const squares = generateDaysOfWeekLabels().concat(generateBlanks(renderedDatePrimative), generateDays(renderedDatePrimative));
   const documentFragment = document.createDocumentFragment();
   for(const square of squares) {
     const div = document.createElement('div');
@@ -44,13 +47,13 @@ function generateDaysOfWeekLabels() {
   return abbreviations.map(label => new Square(label, 'dayLabel'));
 }
 
-function generateBlanks(month) {
-  const blankDays = new Array(numberOfBlankDays(month)).fill();
+function generateBlanks(renderedDatePrimative) {
+  const blankDays = new Array(numberOfBlankDays(renderedDatePrimative)).fill();
   return blankDays.map(() => new Square());
 }
 
-function generateDays(month) {
-  const dates = new Array(numberOfDays(month)).fill();
+function generateDays(renderedDatePrimative) {
+  const dates = new Array(numberOfDays(renderedDatePrimative)).fill();
   return dates.map((val, index) => new Square(index + 1, 'day'));
 }
 
@@ -59,16 +62,15 @@ function Square(label ='', className='') {
   this.className = className;
 }
 
-function numberOfBlankDays(month) {
-  const firstOfMonth = new Date();
-  firstOfMonth.setMonth(month);
+function numberOfBlankDays(renderedDatePrimative) {
+  const firstOfMonth = new Date(renderedDatePrimative);
   firstOfMonth.setDate(1);
   return firstOfMonth.getDay();
 }
 
-function numberOfDays(month) {
-  const lastDayOfMonth = new Date();
-  lastDayOfMonth.setMonth(month + 1);
+function numberOfDays(renderedDatePrimative) {
+  const lastDayOfMonth = new Date(renderedDatePrimative);
+  lastDayOfMonth.setMonth(lastDayOfMonth.getMonth() + 1);
   lastDayOfMonth.setDate(0);
   return lastDayOfMonth.getDate();
 }
