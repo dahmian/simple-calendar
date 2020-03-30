@@ -45,23 +45,31 @@ function generateDaysOfWeekLabels() {
 }
 
 function generateBlanks(month) {
-  const firstOfMonth = new Date();
-  firstOfMonth.setMonth(month);
-  firstOfMonth.setDate(1);
-  const blankDays = new Array(firstOfMonth.getDay()).fill();
+  const blankDays = new Array(numberOfBlankDays(month)).fill();
   return blankDays.map(() => new Square());
 }
 
 function generateDays(month) {
-  const lastDayOfMonth = new Date();
-  lastDayOfMonth.setMonth(month + 1);
-  lastDayOfMonth.setDate(0);
-  const dates = new Array(lastDayOfMonth.getDate()).fill();
+  const dates = new Array(numberOfDays(month)).fill();
   return dates.map((val, index) => new Square(index + 1, 'day'));
 }
 
 function Square(label ='', className='') {
   this.label = label;
   this.className = className;
+}
+
+function numberOfBlankDays(month) {
+  const firstOfMonth = new Date();
+  firstOfMonth.setMonth(month);
+  firstOfMonth.setDate(1);
+  return firstOfMonth.getDay();
+}
+
+function numberOfDays(month) {
+  const lastDayOfMonth = new Date();
+  lastDayOfMonth.setMonth(month + 1);
+  lastDayOfMonth.setDate(0);
+  return lastDayOfMonth.getDate();
 }
 </script>
