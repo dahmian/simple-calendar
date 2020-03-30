@@ -28,7 +28,7 @@
 render('#calendar', 1);
 
 function render(DOMquery, month) {
-  const squares = createLabels().concat(createPreviousMonthDays(month), createDays(month));
+  const squares = generateDaysOfWeekLabels().concat(generateBlanks(month), generateDays(month));
   const documentFragment = document.createDocumentFragment();
   for(const square of squares) {
     const div = document.createElement('div');
@@ -39,31 +39,29 @@ function render(DOMquery, month) {
   document.querySelector(DOMquery).append(documentFragment);
 }
 
-function createLabels() {
-  const text = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];
-  return text.map(value => createSquare(value, 'daylabel'));
+function generateDaysOfWeekLabels() {
+  const abbreviations = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];
+  return abbreviations.map(label => new Square(label, 'dayLabel'));
 }
 
-function createPreviousMonthDays(month) {
+function generateBlanks(month) {
   const firstOfMonth = new Date();
   firstOfMonth.setMonth(month);
   firstOfMonth.setDate(1);
-  const days = new Array(firstOfMonth.getDay()).fill();
-  return days.map(() => createSquare());
+  const blankDays = new Array(firstOfMonth.getDay()).fill();
+  return blankDays.map(() => new Square());
 }
 
-function createDays(month) {
+function generateDays(month) {
   const lastDayOfMonth = new Date();
   lastDayOfMonth.setMonth(month + 1);
   lastDayOfMonth.setDate(0);
   const dates = new Array(lastDayOfMonth.getDate()).fill();
-  return dates.map((val, index) => createSquare(index + 1, 'day'));
+  return dates.map((val, index) => new Square(index + 1, 'day'));
 }
 
-function createSquare(label ='', className='') {
-  return {
-    label: label,
-    className: className
-  }
+function Square(label ='', className='') {
+  this.label = label;
+  this.className = className;
 }
 </script>
